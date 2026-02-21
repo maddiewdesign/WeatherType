@@ -1,0 +1,31 @@
+.controls {
+  position: fixed;
+  bottom: 30px;
+  left: 30px;
+
+  background: white;
+  padding: 14px 18px;
+
+  border-radius: 4px;
+
+  font-family: sans-serif;
+  font-size: 14px;
+
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+    canvas {
+      display: block;
+    }
+
+    .controls {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      font-family: sans-serif;
+    }
+
+    .controls span {
+      margin-left: 10px;
+    }
