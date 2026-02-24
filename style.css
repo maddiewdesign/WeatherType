@@ -1,31 +1,35 @@
-.controls {
-  position: fixed;
-  bottom: 30px;
-  left: 30px;
-
+/* Reset */
+html, body {
+  margin: 0;
+  padding: 0;
   background: white;
-  padding: 14px 18px;
-
-  border-radius: 4px;
-
-  font-family: sans-serif;
-  font-size: 14px;
-
-  display: flex;
-  align-items: center;
-  gap: 12px;
+  overflow: hidden;
 }
-    canvas {
-      display: block;
-    }
 
-    .controls {
-      position: fixed;
-      bottom: 20px;
-      left: 20px;
-      font-family: sans-serif;
-    }
+/* Canvas */
+canvas {
+  display: block;
+}
 
-    .controls span {
-      margin-left: 10px;
-    }
+/* Minimal Exhibition Input Styling */
+input {
+  font-family: "parabolica", sans-serif;
+  font-weight: 700;
+  font-size: 18px;
+  letter-spacing: 1px;
+
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid black;
+
+  padding: 4px 0;
+  outline: none;
+  color: black;
+}
+
+/* Optional subtle UI positioning */
+input {
+  position: fixed;
+  top: 40px;
+  left: 40px;
+}
