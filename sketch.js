@@ -1,6 +1,5 @@
-// ==========================
-// LIVE WEATHER MASKED TEXT
-// ==========================
+
+// Live Weather 
 let cell = 18;
 let t = 0;
 
@@ -17,9 +16,7 @@ let fontReady = false;
 let lat = 51.5072;
 let lon = -0.1276;
 
-// ==========================
-// SETUP
-// ==========================
+// Setup
 function setup() {
   createCanvas(windowWidth, windowHeight);
   textAlign(CENTER, CENTER);
@@ -39,9 +36,8 @@ function windowResized() {
   generateTextMask();
 }
 
-// ==========================
-// TEXT MASK
-// ==========================
+
+// TEext mask
 function getFittingTextSize(str) {
   textFont("aktiv-grotesk");
 
@@ -74,9 +70,8 @@ function generateTextMask() {
   txtImg.text(currentCity, width * 0.52, height * 0.55);
 }
 
-// ==========================
-// WEATHER
-// ==========================
+
+// Weather
 function fetchWeather() {
   let apiURL = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&hourly=precipitation_probability&current_weather=true&windspeed_unit=mph`;
 
@@ -94,14 +89,10 @@ function fetchWeather() {
         precipitation = data.hourly.precipitation_probability[0] || 0;
       }
 
-      // ==========================
       // WIND DIRECTION LABEL
-      // ==========================
       let dirLabel = getWindDirectionLabel(windDirection);
 
-      // ==========================
-      // UPDATE UI
-      // ==========================
+      // Updates UI
       document.getElementById("precip").textContent =
         Math.round(precipitation) + "%";
 
@@ -118,9 +109,8 @@ function fetchWeather() {
     });
 }
 
-// ==========================
-// CITY SEARCH
-// ==========================
+
+// Location find
 function fetchCity(city) {
   let geoURL = `https://geocoding-api.open-meteo.com/v1/search?name=${city}&count=1`;
 
@@ -144,9 +134,8 @@ function fetchCity(city) {
 
 window.fetchCity = fetchCity;
 
-// ==========================
+
 // DATE
-// ==========================
 function updateDate() {
   let now = new Date();
 
@@ -157,9 +146,8 @@ function updateDate() {
   document.getElementById("date").textContent = `${d}.${m}.${y}`;
 }
 
-// ==========================
+
 // WIND LABEL FUNCTION
-// ==========================
 function getWindDirectionLabel(deg) {
   if (deg >= 337.5 || deg < 22.5) return "N";
   if (deg < 67.5) return "NE";
@@ -171,28 +159,31 @@ function getWindDirectionLabel(deg) {
   return "NW";
 }
 
-// ==========================
-// COLOUR SYSTEM
-// ==========================
+
+// COLOUR SYSTEM, this part makes it transition smoothly
 function getTempColor(x, y) {
   let angle = radians(windDirection);
   let flow = x * cos(angle) + y * sin(angle);
   let n = noise(flow * 0.002, t * 0.4);
 
-  if (temperature > 40) {
+  // first colour is main, second is similar temp colour, fades in and out
+  if (temperature > 35) {
     return lerpColor(color(180, 0, 255), color(255, 120, 255), n);
-  } else if (temperature > 30) {
+  } else if (temperature > 25) {
     return lerpColor(color(255, 0, 0), color(255, 120, 0), n);
-  } else if (temperature > 20) {
+  } else if (temperature > 15) {
     return lerpColor(color(255, 120, 0), color(255, 200, 0), n);
+      } else if (temperature > 40) {
+    return lerpColor(color(70, 0, 156), color(255, 120, 255), n);
+          } else if (temperature > 8) {
+    return lerpColor(color(0, 204, 255), color(255, 200, 0), n);
   } else {
-    return lerpColor(color(0, 150, 255), color(0, 255, 200), n);
+    return lerpColor(color(0, 25, 191), color(0, 255, 200), n);
   }
 }
 
-// ==========================
-// DRAW
-// ==========================
+
+// Actual weather type conditioning 
 function draw() {
   if (!fontReady) return;
 
