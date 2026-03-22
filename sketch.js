@@ -1,11 +1,13 @@
+// ==========================
+// LIVE WEATHER TYPE SYSTEM
+// ==========================
 
-// Live Weather 
 let cell = 18;
 let t = 0;
 
 let precipitation = 0;
 let windSpeed = 0;
-let windDirection = 0;
+let windDirection = 0; // FROM direction (API)
 let temperature = 0;
 
 let currentCity = "London";
@@ -16,7 +18,10 @@ let fontReady = false;
 let lat = 51.5072;
 let lon = -0.1276;
 
-// Setup
+
+// ==========================
+// SETUP
+// ==========================
 function setup() {
   createCanvas(windowWidth, windowHeight);
   textAlign(CENTER, CENTER);
@@ -37,7 +42,9 @@ function windowResized() {
 }
 
 
-// TEext mask
+// ==========================
+// TEXT MASK
+// ==========================
 function getFittingTextSize(str) {
   textFont("aktiv-grotesk");
 
@@ -71,7 +78,9 @@ function generateTextMask() {
 }
 
 
-// Weather
+// ==========================
+// WEATHER API
+// ==========================
 function fetchWeather() {
   let apiURL = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&hourly=precipitation_probability&current_weather=true&windspeed_unit=mph`;
 
@@ -89,10 +98,11 @@ function fetchWeather() {
         precipitation = data.hourly.precipitation_probability[0] || 0;
       }
 
-      // WIND DIRECTION LABEL
+      // Corrected direction (flow direction)
+      let corrected = (windDirection + 180) % 360;
       let dirLabel = getWindDirectionLabel(windDirection);
 
-      // Updates UI
+      // UI UPDATE
       document.getElementById("precip").textContent =
         Math.round(precipitation) + "%";
 
@@ -100,7 +110,7 @@ function fetchWeather() {
         Math.round(windSpeed) + " MPH";
 
       document.getElementById("dir").textContent =
-        `${dirLabel} / ${Math.round(windDirection)}°`;
+        `${dirLabel} / ${Math.round(corrected)}°`;
 
       document.getElementById("temp").textContent =
         Math.round(temperature) + "°C";
@@ -110,7 +120,9 @@ function fetchWeather() {
 }
 
 
-// Location find
+// ==========================
+// LOCATION SEARCH
+// ==========================
 function fetchCity(city) {
   let geoURL = `https://geocoding-api.open-meteo.com/v1/search?name=${city}&count=1`;
 
@@ -135,7 +147,9 @@ function fetchCity(city) {
 window.fetchCity = fetchCity;
 
 
+// ==========================
 // DATE
+// ==========================
 function updateDate() {
   let now = new Date();
 
@@ -147,43 +161,56 @@ function updateDate() {
 }
 
 
-// WIND LABEL FUNCTION
+// ==========================
+// WIND SYSTEM (MASTER FIX)
+// ==========================
+
+// single source of truth
+function getFlowAngle() {
+  return radians((windDirection + 180) % 360);
+}
+
 function getWindDirectionLabel(deg) {
-  if (deg >= 337.5 || deg < 22.5) return "N";
-  if (deg < 67.5) return "NE";
-  if (deg < 112.5) return "E";
-  if (deg < 157.5) return "SE";
-  if (deg < 202.5) return "S";
-  if (deg < 247.5) return "SW";
-  if (deg < 292.5) return "W";
+  let corrected = (deg + 180) % 360;
+
+  if (corrected >= 337.5 || corrected < 22.5) return "N";
+  if (corrected < 67.5) return "NE";
+  if (corrected < 112.5) return "E";
+  if (corrected < 157.5) return "SE";
+  if (corrected < 202.5) return "S";
+  if (corrected < 247.5) return "SW";
+  if (corrected < 292.5) return "W";
   return "NW";
 }
 
 
-// COLOUR SYSTEM, this part makes it transition smoothly
+// ==========================
+// COLOUR SYSTEM (ALIGNED)
+// ==========================
 function getTempColor(x, y) {
-  let angle = radians(windDirection);
-  let flow = x * cos(angle) + y * sin(angle);
+  let angle = getFlowAngle();
+
+  let dx = cos(angle);
+  let dy = sin(angle);
+
+  let flow = x * dx + y * dy;
   let n = noise(flow * 0.002, t * 0.4);
 
-  // first colour is main, second is similar temp colour, fades in and out
-  if (temperature > 35) {
+  if (temperature > 40) {
     return lerpColor(color(180, 0, 255), color(255, 120, 255), n);
-  } else if (temperature > 25) {
+  } else if (temperature > 30) {
     return lerpColor(color(255, 0, 0), color(255, 120, 0), n);
-  } else if (temperature > 15) {
+  } else if (temperature > 20) {
     return lerpColor(color(255, 120, 0), color(255, 200, 0), n);
-      } else if (temperature > 40) {
-    return lerpColor(color(70, 0, 156), color(255, 120, 255), n);
-          } else if (temperature > 8) {
-    return lerpColor(color(0, 204, 255), color(255, 200, 0), n);
   } else {
-    return lerpColor(color(0, 25, 191), color(0, 255, 200), n);
+    return lerpColor(color(0, 150, 255), color(0, 255, 200), n);
   }
 }
 
 
-// Actual weather type conditioning 
+// ==========================
+// DRAW LOOP
+// ==========================
 function draw() {
   if (!fontReady) return;
 
@@ -198,22 +225,28 @@ function draw() {
 
   t += frequency * 0.6 + motionSpeed;
 
-  let angle = radians(windDirection);
+  let angle = getFlowAngle();
+
   let dx = cos(angle);
   let dy = sin(angle);
   let px = -dy;
   let py = dx;
 
+  // -------------------------
   // WIND
+  // -------------------------
   for (let i = -height; i < width + height; i += 18) {
+
     let gust = noise(i * 0.01 + t);
     let thickness = 0.6 + pow(gust, 2) * maxThickness;
     strokeWeight(thickness);
 
     for (let j = -width; j < width * 2; j += 14) {
+
       let n = noise(j * 0.02 + t * 1.8, i * 0.01);
 
       if (n > densityField) {
+
         let x1 = width / 2 + px * i + dx * j;
         let y1 = height / 2 + py * i + dy * j;
         let x2 = x1 + dx * 14;
@@ -227,7 +260,9 @@ function draw() {
     }
   }
 
+  // -------------------------
   // RAIN
+  // -------------------------
   noStroke();
 
   for (let y = 0; y < height; y += cell) {
@@ -245,3 +280,82 @@ function draw() {
     }
   }
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+
+  let sandboxActive = false;
+
+  const toggleBtn = document.getElementById("toggleSandbox");
+  const controls = document.querySelectorAll(".control");
+
+  if (!toggleBtn) return; // safety
+
+ toggleBtn.addEventListener("click", () => {
+  window.sandboxActive = !window.sandboxActive;
+
+  toggleBtn.textContent = window.sandboxActive ? "ON" : "OFF";
+
+  // 🔥 KEY FIX
+  if (!window.sandboxActive) {
+    fetchWeather(); // instantly restore real data
+  }
+});
+
+  controls.forEach(control => {
+    const track = control.querySelector(".track");
+    const handle = control.querySelector(".handle");
+    const valueText = control.querySelector(".value");
+
+    let dragging = false;
+
+    function update(e) {
+      const rect = track.getBoundingClientRect();
+      let x = e.clientX - rect.left;
+
+      let percent = Math.max(0, Math.min(1, x / rect.width));
+
+      handle.style.left = `${percent * 100}%`;
+
+      let type = control.dataset.type;
+
+      if (type === "precip") {
+        precipitation = Math.round(percent * 100);
+        valueText.textContent = precipitation;
+      }
+
+      if (type === "wind") {
+        windSpeed = Math.round(percent * 60);
+        valueText.textContent = windSpeed;
+      }
+
+      if (type === "dir") {
+        windDirection = Math.round(percent * 360);
+        valueText.textContent = windDirection;
+      }
+
+      if (type === "temp") {
+        temperature = Math.round(percent * 45);
+        valueText.textContent = temperature;
+      }
+    }
+
+    track.addEventListener("click", update);
+
+    track.addEventListener("mousedown", (e) => {
+      dragging = true;
+      update(e);
+    });
+
+    window.addEventListener("mousemove", (e) => {
+      if (dragging) update(e);
+    });
+
+    window.addEventListener("mouseup", () => {
+      dragging = false;
+    });
+  });
+
+  // expose to global (IMPORTANT for your sketch.js)
+  window.sandboxActive = sandboxActive;
+
+});
