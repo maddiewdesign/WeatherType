@@ -212,22 +212,47 @@ function getTempColor(x, y) {
     ? sandboxValues.temperature
     : temperature;
 
-  let angle = getFlowAngle();
-  let dx = cos(angle);
-  let dy = sin(angle);
+  // Cap extremes
+  temp = constrain(temp, -10, 45);
 
-  let flow = x * dx + y * dy;
+  // Flow-based noise for subtle variation
+  let angle = getFlowAngle();
+  let flow = x * cos(angle) + y * sin(angle);
   let n = noise(flow * 0.002, t * 0.4);
 
-  if (temp > 40) {
-    return lerpColor(color(180, 0, 255), color(255, 120, 255), n);
-  } else if (temp > 30) {
-    return lerpColor(color(255, 0, 0), color(255, 120, 0), n);
-  } else if (temp > 20) {
-    return lerpColor(color(255, 120, 0), color(255, 200, 0), n);
-  } else {
-    return lerpColor(color(0, 150, 255), color(0, 255, 200), n);
+  // Define color stops
+  const colors = [
+    { t: -5, c: color(0, 0, 80) },        // dark blue
+    { t: -4, c: color(0, 0, 255) },       // blue
+    { t: 5,  c: color(64, 224, 208) },    // turquoise
+    { t: 12, c: color(30, 121, 66) },       // green
+    { t: 18, c: color(173, 255, 47) },    // green-yellow
+    { t: 24, c: color(255, 255, 0) },     // yellow
+    { t: 30, c: color(255, 165, 0) },     // orange
+    { t: 35, c: color(255, 0, 0) },       // red
+    { t: 40, c: color(128, 0, 128) }      // deep purple
+  ];
+
+  // Handle temps below first stop
+  if (temp <= colors[0].t) return colors[0].c;
+  // Handle temps above last stop
+  if (temp >= colors[colors.length - 1].t) return colors[colors.length - 1].c;
+
+  // Find the two stops temp is between
+  let lower = colors[0], upper = colors[colors.length - 1];
+  for (let i = 0; i < colors.length - 1; i++) {
+    if (temp >= colors[i].t && temp <= colors[i + 1].t) {
+      lower = colors[i];
+      upper = colors[i + 1];
+      break;
+    }
   }
+
+  // Normalize temp between lower.t and upper.t
+  let amt = (temp - lower.t) / (upper.t - lower.t);
+
+  // Interpolate color and add subtle noise
+  return lerpColor(lower.c, upper.c, amt * (0.7 + 0.3 * n));
 }
 
 
@@ -258,30 +283,41 @@ function draw() {
   let py = dx;
 
   // WIND
-  for (let i = -height; i < width + height; i += 18) {
+// WIND
+for (let i = -height; i < width + height; i += 18) {
 
-    let gust = noise(i * 0.01 + t);
-    let thickness = 0.6 + pow(gust, 2) * maxThickness;
-    strokeWeight(thickness);
+  let gust = noise(i * 0.01 + t);
+  let thickness = 0.6 + pow(gust, 2) * maxThickness;
+  strokeWeight(thickness);
 
-    for (let j = -width; j < width * 2; j += 14) {
+  for (let j = -width; j < width * 2; j += 14) {
 
-      let n = noise(j * 0.02 + t * 1.8, i * 0.01);
+    let n = noise(j * 0.02 + t * 1.8, i * 0.01);
 
-      if (n > densityField) {
+    if (n > densityField) {
 
-        let x1 = width / 2 + px * i + dx * j;
-        let y1 = height / 2 + py * i + dy * j;
-        let x2 = x1 + dx * 14;
-        let y2 = y1 + dy * 14;
+      let x1 = width / 2 + px * i + dx * j;
+      let y1 = height / 2 + py * i + dy * j;
+      let x2 = x1 + dx * 14;
+      let y2 = y1 + dy * 14;
 
-        if (txtImg.get(x1, y1)[0] > 128) {
-          stroke(getTempColor(x1, y1));
-          line(x1, y1, x2, y2);
-        }
+      if (txtImg.get(x1, y1)[0] > 128) {
+        // Original heat map color
+        let c = getTempColor(x1, y1);
+
+        // Increase contrast: brighten or darken slightly based on gust
+        let windContrast = map(gust, 0, 1, 0.6, 1.2); 
+        stroke(
+          red(c) * windContrast,
+          green(c) * windContrast,
+          blue(c) * windContrast
+        );
+
+        line(x1, y1, x2, y2);
       }
     }
   }
+}
 
   // RAIN
   noStroke();
