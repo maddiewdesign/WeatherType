@@ -211,33 +211,33 @@ function getTempColor(x, y) {
     ? sandboxValues.temperature
     : temperature;
 
-  // Cap extremes
-  temp = constrain(temp, -10, 45);
+  // ✅ Updated full range
+  temp = constrain(temp, -15, 45);
 
-  // Flow-based noise for subtle variation
+  // Flow-based noise
   let angle = getFlowAngle();
   let flow = x * cos(angle) + y * sin(angle);
   let n = noise(flow * 0.002, t * 0.4);
 
-  // Define color stops
-  const colors = [
-    { t: -5, c: color(0, 0, 80) },        // dark blue
-    { t: -4, c: color(0, 0, 255) },       // blue
-    { t: 5,  c: color(64, 224, 208) },    // turquoise
-    { t: 12, c: color(30, 121, 66) },       // green
-    { t: 18, c: color(173, 255, 47) },    // green-yellow
-    { t: 24, c: color(255, 255, 0) },     // yellow
-    { t: 30, c: color(255, 165, 0) },     // orange
-    { t: 35, c: color(255, 0, 0) },       // red
-    { t: 40, c: color(128, 0, 128) }      // deep purple
-  ];
+  // Color stops
+ const colors = [
+  { t: -25, c: color(151, 193, 230) },
+  { t: -15, c: color (45,37,111) },     // very dark blue
+  { t: -10, c: color(0, 0, 80) },     // deep blue
+  { t: -5,  c: color(0, 0, 140) },    // mid blue
+  { t: 0,   c: color(0, 80, 255) },   // bright blue
+  { t: 5,   c: color(64, 224, 208) }, // turquoise
+  { t: 12,  c: color(30, 121, 66) },  
+  { t: 18,  c: color(173, 255, 47) },
+  { t: 24,  c: color(255, 255, 0) },
+  { t: 30,  c: color(255, 165, 0) },
+  { t: 35,  c: color(255, 0, 0) },
+  { t: 40,  c: color(128, 0, 128) }
+];
 
-  // Handle temps below first stop
   if (temp <= colors[0].t) return colors[0].c;
-  // Handle temps above last stop
   if (temp >= colors[colors.length - 1].t) return colors[colors.length - 1].c;
 
-  // Find the two stops temp is between
   let lower = colors[0], upper = colors[colors.length - 1];
   for (let i = 0; i < colors.length - 1; i++) {
     if (temp >= colors[i].t && temp <= colors[i + 1].t) {
@@ -247,11 +247,42 @@ function getTempColor(x, y) {
     }
   }
 
-  // Normalize temp between lower.t and upper.t
   let amt = (temp - lower.t) / (upper.t - lower.t);
 
-  // Interpolate color and add subtle noise
-  return lerpColor(lower.c, upper.c, amt * (0.7 + 0.3 * n));
+  // ==========================
+  // 🎨 BASE COLOUR
+  // ==========================
+  let baseColor = lerpColor(lower.c, upper.c, amt * (0.7 + 0.3 * n));
+
+  // ==========================
+  // 🌊 DYNAMIC HUE SYSTEM
+  // ==========================
+  colorMode(HSB, 360, 100, 100);
+
+  let h = hue(baseColor);
+  let s = saturation(baseColor);
+  let b = brightness(baseColor);
+
+  // 🔥 MUCH STRONGER (you will SEE this now)
+  let hueShift = map(
+    noise(x * 0.01, y * 0.01, t * 0.6),
+    0, 1,
+    -20, 20
+  );
+
+  // 🌬 Wind-aligned wave motion
+  let flowWave = sin(flow * 0.02 + t * 2) * 8;
+
+  // 🌡 Temp affects instability (nice touch)
+  let tempFactor = map(temp, -15, 45, 0.6, 1.4);
+
+  h = (h + (hueShift + flowWave) * tempFactor + 360) % 360;
+
+  let finalColor = color(h, s, b);
+
+  colorMode(RGB, 255);
+
+  return finalColor;
 }
 
 
