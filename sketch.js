@@ -18,7 +18,6 @@ let sandboxValues = {
   windDirection: 180,
   temperature: 18
 };
-
 window.sandboxActive = false;
 
 let currentCity = "London";
@@ -282,7 +281,6 @@ function draw() {
   let px = -dy;
   let py = dx;
 
-  // WIND
 // WIND
 for (let i = -height; i < width + height; i += 18) {
 
@@ -347,9 +345,16 @@ document.addEventListener("DOMContentLoaded", () => {
   const toggleBtn = document.getElementById("toggleSandbox");
   const controls = document.querySelectorAll(".control");
 
+  if (!toggleBtn) return; // safety
+
+  // TOGGLE BUTTON
   toggleBtn.addEventListener("click", () => {
     window.sandboxActive = !window.sandboxActive;
+
     toggleBtn.textContent = window.sandboxActive ? "ON" : "OFF";
+
+    // ✅ VISUAL STATE
+    toggleBtn.classList.toggle("active", window.sandboxActive);
 
     if (!window.sandboxActive) {
       fetchWeather();
@@ -358,10 +363,14 @@ document.addEventListener("DOMContentLoaded", () => {
     updateUI();
   });
 
+  // CONTROLS (SLIDERS)
   controls.forEach(control => {
+
     const track = control.querySelector(".track");
     const handle = control.querySelector(".handle");
     const valueText = control.querySelector(".value");
+
+    if (!track || !handle) return; // safety
 
     let dragging = false;
 
@@ -389,10 +398,10 @@ document.addEventListener("DOMContentLoaded", () => {
         valueText.textContent = sandboxValues.windDirection;
       }
 
-      if (type === "temp") {
-        sandboxValues.temperature = Math.round(percent * 45);
-        valueText.textContent = sandboxValues.temperature;
-      }
+     if (type === "temp") {
+  sandboxValues.temperature = Math.round(-15 + percent * 60);
+  valueText.textContent = sandboxValues.temperature;
+}
 
       updateUI();
     }
@@ -411,6 +420,7 @@ document.addEventListener("DOMContentLoaded", () => {
     window.addEventListener("mouseup", () => {
       dragging = false;
     });
+
   });
 
 });

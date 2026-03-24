@@ -163,6 +163,7 @@ input {
   color: #dcdcdc;
 }
 
+
 /* HEADER */
 .sandbox-header {
   display: flex;
@@ -217,4 +218,26 @@ input {
   height: 8px;
   background: #ffffff;
   left: 0%;
+}
+
+/* =========================
+   SANDBOX BUTTON
+========================= */
+#toggleSandbox {
+  background: none;
+  border: 1px solid rgba(255,255,255,0.3);
+  color: #dcdcdc;
+  font-family: "ibm-plex-mono", monospace;
+  font-size: 11px;
+  padding: 2px 8px;
+  cursor: pointer;
+
+  transition: all 0.15s ease;
+}
+
+/* ✅ ACTIVE STATE */
+#toggleSandbox.active {
+  background: #ffffff;
+  color: #000000;
+  border: 1px solid #ffffff;
 }
