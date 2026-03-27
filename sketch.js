@@ -211,7 +211,7 @@ function getTempColor(x, y) {
     ? sandboxValues.temperature
     : temperature;
 
-  // ✅ Updated full range
+  // Updated full range
   temp = constrain(temp, -15, 45);
 
   // Flow-based noise
@@ -219,7 +219,7 @@ function getTempColor(x, y) {
   let flow = x * cos(angle) + y * sin(angle);
   let n = noise(flow * 0.002, t * 0.4);
 
-  // Color stops
+  // Colour stops
  const colors = [
   { t: -25, c: color(151, 193, 230) },
   { t: -15, c: color (45,37,111) },     // very dark blue
@@ -250,12 +250,12 @@ function getTempColor(x, y) {
   let amt = (temp - lower.t) / (upper.t - lower.t);
 
   // ==========================
-  // 🎨 BASE COLOUR
+  // BASE COLOUR
   // ==========================
   let baseColor = lerpColor(lower.c, upper.c, amt * (0.7 + 0.3 * n));
 
   // ==========================
-  // 🌊 DYNAMIC HUE SYSTEM
+  // DYNAMIC HUE SYSTEM
   // ==========================
   colorMode(HSB, 360, 100, 100);
 
@@ -263,17 +263,16 @@ function getTempColor(x, y) {
   let s = saturation(baseColor);
   let b = brightness(baseColor);
 
-  // 🔥 MUCH STRONGER (you will SEE this now)
   let hueShift = map(
     noise(x * 0.01, y * 0.01, t * 0.6),
     0, 1,
     -20, 20
   );
 
-  // 🌬 Wind-aligned wave motion
+  // Wind-aligned wave motion
   let flowWave = sin(flow * 0.02 + t * 2) * 8;
 
-  // 🌡 Temp affects instability (nice touch)
+  // Temp affects instability 
   let tempFactor = map(temp, -15, 45, 0.6, 1.4);
 
   h = (h + (hueShift + flowWave) * tempFactor + 360) % 360;
@@ -331,10 +330,10 @@ for (let i = -height; i < width + height; i += 18) {
       let y2 = y1 + dy * 14;
 
       if (txtImg.get(x1, y1)[0] > 128) {
-        // Original heat map color
+        // heat colour
         let c = getTempColor(x1, y1);
 
-        // Increase contrast: brighten or darken slightly based on gust
+        // Contrast for heavier/lighter wind
         let windContrast = map(gust, 0, 1, 0.6, 1.2); 
         stroke(
           red(c) * windContrast,
@@ -384,7 +383,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     toggleBtn.textContent = window.sandboxActive ? "ON" : "OFF";
 
-    // ✅ VISUAL STATE
+    // VISUAL STATE
     toggleBtn.classList.toggle("active", window.sandboxActive);
 
     if (!window.sandboxActive) {

@@ -235,7 +235,7 @@ input {
   transition: all 0.15s ease;
 }
 
-/* ✅ ACTIVE STATE */
+/* ACTIVE STATE */
 #toggleSandbox.active {
   background: #ffffff;
   color: #000000;
