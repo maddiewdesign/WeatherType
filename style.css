@@ -204,7 +204,7 @@ input {
   height: 1px;
   background: rgba(255,255,255,0.08);
 
-  margin-top: 40px; /* keeps spacing consistent */
+  margin-top: -10px; /* keeps spacing consistent */
 }
 
 /* =========================
@@ -214,7 +214,7 @@ input {
   grid-column: 1 / -1;
   grid-row: 5;
 
-  margin-top: 80px; /* preserves your original spacing */
+  margin-top: 80px;
 
   display: flex;
   justify-content: space-between;
