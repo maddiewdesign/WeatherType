@@ -92,10 +92,23 @@
     input.addEventListener("keydown", (e) => {
       if (e.key === "Enter") {
         const value = input.value.trim();
-        if (value !== "" && window.fetchCity) {
-          window.fetchCity(value);
-          input.value = "";
-        }
+        if (value !== "") {
+
+  // "/" override ONLY in sandbox
+  if (window.sandboxActive && value.startsWith("/")) {
+
+    if (window.devGenerateFromInput) {
+      window.devGenerateFromInput(value);
+    }
+
+  } else if (window.fetchCity) {
+
+    window.fetchCity(value);
+
+  }
+
+  input.value = "";
+}
       }
     });
 

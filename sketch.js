@@ -31,6 +31,30 @@ let lat = 51.5072;
 let lon = -0.1276;
 
 // --------------------------
+// DEV: "/" ANYTHING MODE
+// --------------------------
+function devGenerateFromInput(value) {
+  const str = value.slice(1); // remove "/"
+
+  // Update visible type
+  currentCity = str;
+  generateTextMask();
+
+  // Generate values from string
+  let sum = 0;
+  for (let i = 0; i < str.length; i++) {
+    sum += str.charCodeAt(i);
+  }
+
+  sandboxValues.precipitation = sum % 100;
+  sandboxValues.windSpeed = (sum * 2) % 60;
+  sandboxValues.windDirection = (sum * 5) % 360;
+  sandboxValues.temperature = (sum % 60) - 15;
+
+  updateUI();
+}
+
+// --------------------------
 // DOM CACHE (IMPORTANT)
 // --------------------------
 const DOM = {};
@@ -416,3 +440,5 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
 });
+
+window.devGenerateFromInput = devGenerateFromInput;
