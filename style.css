@@ -167,14 +167,13 @@ canvas {
   max-width: 320px;
   border: 1px solid rgba(255,255,255,0.18);
   padding: 18px;
-  background: rgba(10,10,10,0.22);
+  background: rgba(10,10,10,0.92);
   color: #dcdcdc;
   font-family: "ibm-plex-mono", monospace;
   font-size: 12px;
   line-height: 1.7;
   letter-spacing: 0.35px;
   box-shadow: inset 0 0 0 1px rgba(255,255,255,0.05);
-  backdrop-filter: blur(10px);
   pointer-events: auto;
 }
 
@@ -197,21 +196,21 @@ canvas {
 }
 
 .help-card--data {
-  top: 70px;
-  left: 40px;
+  top: 54px;
+  left: 24px;
   max-width: 280px;
 }
 
 .help-card--sandbox {
-  top: 90px;
-  right: 40px;
+  top: 54px;
+  right: 24px;
   max-width: 260px;
 }
 
 .help-card--command {
-  bottom: 90px;
-  left: 40px;
-  max-width: 300px;
+  bottom: 110px;
+  left: 24px;
+  max-width: 320px;
 }
 
 @media (max-width: 900px) {
@@ -295,6 +294,7 @@ canvas {
 }
 
 .track {
+  position: relative;
   margin-top: 6px;
   height: 1px;
   background: rgba(255,255,255,0.3);
@@ -302,9 +302,15 @@ canvas {
 
 .handle {
   position: absolute;
-  width: 6px;
-  height: 8px;
-  background: #fff;
+  top: 50%;
+  left: 0;
+  transform: translate(-50%, -50%);
+  width: 8px;
+  height: 14px;
+  background: #0a0a0a;
+  border: 1px solid #fff;
+  box-sizing: border-box;
+  border-radius: 2px;
 }
 
 /* =========================
@@ -418,12 +424,12 @@ input:focus {
   background: rgba(255,255,255,0.3);
 }
 
-.handle {
+..handle {
   position: absolute;
   top: 50%;
   transform: translate(-50%, -50%);
-  width: 10px;
-  height: 16px;
+  width: 8px;
+  height: 14px;
   background: #0a0a0a;
   border: none;
   box-shadow: 0 0 0 1px #dcdcdc;

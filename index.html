@@ -94,8 +94,6 @@
   <div class="help-overlay" id="helpOverlay" role="dialog" aria-modal="true" aria-hidden="true">
     <div class="help-backdrop"></div>
     <div class="help-panel">
-      <button class="help-close" id="helpClose" aria-label="Close help">×</button>
-
       <div class="help-card help-card--data">
         <div class="help-card__title">Live weather data</div>
         <div class="help-card__text">This section shows the current date, location, precipitation, wind speed, wind direction, and temperature from the weather feed.</div>
@@ -152,9 +150,11 @@
       helpOverlay.setAttribute("aria-hidden", show ? "false" : "true");
     }
 
-    if (helpButton && helpOverlay && helpClose && helpBackdrop) {
+    if (helpButton && helpOverlay && helpBackdrop) {
       helpButton.addEventListener("click", () => toggleHelp(true));
-      helpClose.addEventListener("click", () => toggleHelp(false));
+      if (helpClose) {
+        helpClose.addEventListener("click", () => toggleHelp(false));
+      }
       helpBackdrop.addEventListener("click", () => toggleHelp(false));
       document.addEventListener("keydown", (event) => {
         if (event.key === "Escape" && helpOverlay.classList.contains("visible")) {
