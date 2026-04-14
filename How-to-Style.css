@@ -1,0 +1,74 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: "ibm-plex-mono", monospace;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  overflow: auto;
+  background: #000;
+}
+
+/* GRID */
+.split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  height: 100vh;
+}
+
+/* COLUMNS */
+.left,
+.right {
+  padding: 60px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* LEFT */
+.left {
+  background: #0a0a0a;
+  color: #fff;
+}
+
+.title {
+  font-size: 30px;
+  line-height: 1.1;
+  letter-spacing: 1px;
+  margin-bottom: 40px;
+}
+
+.title span {
+  display: block;
+  font-size: 14px;
+  opacity: 0.6;
+}
+
+.body-text {
+  max-width: 460px;
+  font-size: 11px;
+  line-height: 1.25;
+  white-space: pre;
+  letter-spacing: 0.3px;
+}
+
+/* RIGHT */
+.right {
+  background: #f2f2f2;
+  color: #0a0a0a;
+}
+
+.code {
+  font-size: 11px;
+  line-height: 1.25;
+  letter-spacing: 0.3px;
+}
+
+/* HIGHLIGHT */
+.code mark {
+  background: #0a0a0a;
+  color: #fff;
+  padding: 1px 3px;
+  display: inline;
+}

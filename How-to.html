@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>H0W IT W0RKS</title>
+
+  <link rel="stylesheet" href="https://use.typekit.net/kxv1wea.css">
+  <link rel="stylesheet" href="how-to-style.css">
+</head>
+
+<body>
+
+<div class="split">
+
+  <!-- LEFT -->
+  <div class="left">
+
+    <div class="title">
+      H0W IT W0RKS
+      <span>&lt;C0RE C0DE&gt;</span>
+    </div>
+
+    <p class="body-text">
+// DATA FETCHING
+
+function fetchWeather() {
+
+    let url = `open-meteo API`;
+
+    fetch(url)
+        .then(r => r.json())
+        .then(data => {
+
+            windSpeed = data.current_weather.windspeed;
+            windDirection = data.current_weather.winddirection;
+            temperature = data.current_weather.temperature;
+
+            precipitation = data.hourly.precipitation_probability[0];
+        });
+}
+
+
+// RAIN SYSTEM
+
+let rain = noise(x * 0.01, y * 0.01, t);
+let intensity = map(rain, threshold, 1, 0, 1);
+
+ellipse(x, y, d, d);
+
+This system translates live weather data
+into visual behaviour.
+
+Noise introduces variation, allowing the
+output to feel organic rather than mechanical.
+    </p>
+
+  </div>
+
+  <!-- RIGHT SIDE -->
+  <div class="right">
+
+    <p class="code">
+
+<mark>// Wind:</mark><br><br>
+
+<mark>for (let i = -height; i < width + height; i += 18) {</mark><br>
+<mark>&nbsp;&nbsp;let gust = noise(i * 0.01 + t);</mark><br>
+<mark>&nbsp;&nbsp;strokeWeight(0.6 + pow(gust, 2) * maxThickness);</mark><br><br>
+
+<mark>&nbsp;&nbsp;for (let j = -width; j < width * 2; j += 14) {</mark><br><br>
+
+<mark>&nbsp;&nbsp;&nbsp;&nbsp;if (noise(j * 0.02 + t * 1.8, i * 0.01) > densityField) {</mark><br><br>
+
+<mark>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let x1 = width/2 + px*i + dx*j;</mark><br>
+<mark>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;let y1 = height/2 + py*i + dy*j;</mark><br><br>
+
+<mark>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (txtImg.get(x1, y1)[0] > 128) {</mark><br>
+<mark>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;stroke(getTempColor(x1, y1));</mark><br>
+<mark>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;line(x1, y1, x1 + dx*14, y1 + dy*14);</mark><br>
+<mark>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}</mark><br>
+
+<mark>&nbsp;&nbsp;&nbsp;&nbsp;}</mark><br>
+<mark>&nbsp;&nbsp;}</mark><br>
+<mark>}</mark><br><br>
+
+
+<mark>// Colour:</mark><br><br>
+
+<mark>function getTempColor(x, y) {</mark><br>
+
+<mark>&nbsp;&nbsp;let temp = window.sandboxActive</mark><br>
+<mark>&nbsp;&nbsp;&nbsp;&nbsp;? sandboxValues.temperature</mark><br>
+<mark>&nbsp;&nbsp;&nbsp;&nbsp;: temperature;</mark><br><br>
+
+<mark>&nbsp;&nbsp;temp = constrain(temp, -15, 45);</mark><br><br>
+
+<mark>&nbsp;&nbsp;let lower = colors[0];</mark><br>
+<mark>&nbsp;&nbsp;let upper = colors[colors.length - 1];</mark><br><br>
+
+<mark>&nbsp;&nbsp;for (let i = 0; i < colors.length - 1; i++) {</mark><br>
+<mark>&nbsp;&nbsp;&nbsp;&nbsp;if (temp >= colors[i].t && temp <= colors[i + 1].t) {</mark><br>
+<mark>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;lower = colors[i];</mark><br>
+<mark>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;upper = colors[i + 1];</mark><br>
+<mark>&nbsp;&nbsp;&nbsp;&nbsp;}</mark><br>
+<mark>&nbsp;&nbsp;}</mark><br><br>
+
+<mark>&nbsp;&nbsp;let amt = (temp - lower.t) / (upper.t - lower.t);</mark><br>
+<mark>&nbsp;&nbsp;let base = lerpColor(lower.c, upper.c, amt);</mark><br><br>
+
+<mark>&nbsp;&nbsp;let h = hue(base) + noise(x, y, t);</mark><br>
+<mark>&nbsp;&nbsp;let s = saturation(base);</mark><br>
+<mark>&nbsp;&nbsp;let b = brightness(base);</mark><br><br>
+
+<mark>&nbsp;&nbsp;return color(h, s, b);</mark><br>
+
+<mark>}</mark>
+
+    </p>
+
+  </div>
+
+</div>
+
+</body>
+</html>

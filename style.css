@@ -9,7 +9,7 @@ html, body {
 }
 
 /* =========================
-   CANVAS (BACKGROUND)
+   CANVAS
 ========================= */
 canvas {
   position: fixed;
@@ -19,7 +19,7 @@ canvas {
 }
 
 /* =========================
-   GRID SYSTEM (FIXED)
+   GRID
 ========================= */
 .grid {
   position: fixed;
@@ -27,18 +27,15 @@ canvas {
   z-index: 2;
 
   display: grid;
-
-  /* COLUMNS (UNCHANGED) */
   grid-template-columns: repeat(12, 1fr);
   column-gap: 24px;
 
-  
   grid-template-rows:
-    auto      /* top (data + sandbox) */
-    1fr       /* flexible space */
-    auto      /* TYPE ZONE */
-    1fr       /* flexible space */
-    auto;     /* bottom UI */
+    auto
+    1fr
+    auto
+    1fr
+    auto;
 
   padding: 40px;
 
@@ -51,7 +48,7 @@ canvas {
 }
 
 /* =========================
-   DATA (TOP LEFT)
+   DATA
 ========================= */
 .data {
   grid-column: 1 / span 3;
@@ -73,7 +70,7 @@ canvas {
 }
 
 /* =========================
-   SANDBOX (TOP RIGHT)
+   SANDBOX
 ========================= */
 .sandbox {
   grid-column: 10 / span 3;
@@ -82,26 +79,13 @@ canvas {
   font-size: 12px;
 }
 
-/* =========================
-   TYPE ROW (ANCHOR ONLY)
-========================= */
-.type-row {
-  grid-column: 1 / -1;
-  grid-row: 3;
-  pointer-events: none;
-}
-
-/* =========================
-   SANDBOX HEADER
-========================= */
 .sandbox-header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
   margin-bottom: 20px;
 }
 
-/* BUTTON */
+/* BUTTON (existing) */
 #toggleSandbox {
   background: none;
   border: 1px solid rgba(255,255,255,0.3);
@@ -110,24 +94,18 @@ canvas {
   font-size: 11px;
   padding: 2px 8px;
   cursor: pointer;
-  transition: all 0.15s ease;
 }
 
 #toggleSandbox.active {
-  background: #ffffff;
-  color: #000000;
-  border: 1px solid #ffffff;
+  background: #fff;
+  color: #000;
 }
 
 /* =========================
-   SANDBOX CONTROLS
+   CONTROLS
 ========================= */
 .control {
   margin-bottom: 18px;
-}
-
-.control span {
-  display: inline-block;
 }
 
 .control span:first-child {
@@ -140,27 +118,39 @@ canvas {
   opacity: 0.7;
 }
 
-/* TRACK */
 .track {
-  position: relative;
   margin-top: 6px;
   height: 1px;
   background: rgba(255,255,255,0.3);
-  cursor: pointer;
 }
 
-/* HANDLE */
 .handle {
   position: absolute;
-  top: -4px;
   width: 6px;
   height: 8px;
-  background: #ffffff;
-  left: 0%;
+  background: #fff;
 }
 
 /* =========================
-   COMMAND (BOTTOM LEFT)
+   TYPE ROW
+========================= */
+.type-row {
+  grid-column: 1 / -1;
+  grid-row: 3;
+}
+
+/* =========================
+   DIVIDER
+========================= */
+.divider {
+  grid-column: 1 / -1;
+  grid-row: 5;
+  height: 1px;
+  background: rgba(255,255,255,0.08);
+}
+
+/* =========================
+   COMMAND
 ========================= */
 .command {
   grid-column: 1 / span 4;
@@ -173,38 +163,50 @@ canvas {
   pointer-events: auto;
 }
 
-.command span {
-  opacity: 0.6;
-}
-
-/* INPUT */
 input {
-  font-family: inherit;
-  font-size: 14px;
-  letter-spacing: 1px;
-
-  background: transparent;
+  background: none;
   border: none;
   border-bottom: 1px solid #888;
-
-  padding: 6px 0;
-  outline: none;
-  color: #ffffff;
-
-  width: 100%;
+  color: #fff;
+  font-family: inherit;
+  font-size: 14px;
 }
 
 /* =========================
-   DIVIDER
+   HOW BUTTON
 ========================= */
-.divider {
-  grid-column: 1 / -1;
+.how {
+  grid-column: 10 / span 3;
   grid-row: 5;
 
-  height: 1px;
-  background: rgba(255,255,255,0.08);
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-start;
 
-  margin-top: -10px; /* keeps spacing consistent */
+  pointer-events: auto;
+}
+.how {
+  pointer-events: auto;
+}
+
+.how-btn {
+  text-decoration: none;
+
+  background: none;
+  border: 1px solid rgba(255,255,255,0.3);
+  color: #dcdcdc;
+
+  font-family: inherit;
+  font-size: 11px;
+
+  padding: 2px 8px;
+
+  cursor: pointer;
+}
+
+.how-btn:hover {
+  border: 1px solid #fff;
+  color: #fff;
 }
 
 /* =========================
@@ -223,25 +225,19 @@ input {
   opacity: 0.5;
 }
 
-/* =========================
-   MOBILE (SAFE)
-========================= */
-@media (max-width: 768px) {
+.track {
+  position: relative;
+  width: 100%;
+  height: 1px;
+  background: rgba(255,255,255,0.3);
+}
 
-  .grid {
-    grid-template-columns: repeat(4, 1fr);
-    padding: 20px;
-  }
-
-  .data {
-    grid-column: 1 / span 2;
-  }
-
-  .sandbox {
-    grid-column: 3 / span 2;
-  }
-
-  .command {
-    grid-column: 1 / span 4;
-  }
+.handle {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 6px;
+  height: 8px;
+  background: #ffffff;
+  left: 0%;
 }

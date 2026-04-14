@@ -61,20 +61,22 @@
       </div>
     </div>
 
-    <!-- TYPE ROW MARKER (invisible but structural) -->
+    <!-- TYPE ROW -->
     <div class="type-row"></div>
 
-
-        <!-- DIVIDER -->
+    <!-- DIVIDER -->
     <div class="divider"></div>
-    
+
     <!-- COMMAND -->
     <div class="command">
       <span>&gt; TYPE LOCATION</span>
       <input id="cityInput" type="text" autocomplete="off"/>
     </div>
 
-
+    <!-- HOW IT WORKS BUTTON -->
+    <div class="how">
+      <a href="How-to.html" class="how-btn">&gt; HOW IT WORKS</a>
+    </div>
 
     <!-- FOOTER -->
     <div class="footer">
@@ -94,21 +96,20 @@
         const value = input.value.trim();
         if (value !== "") {
 
-  // "/" override ONLY in sandbox
-  if (window.sandboxActive && value.startsWith("/")) {
+          if (window.sandboxActive && value.startsWith("/")) {
 
-    if (window.devGenerateFromInput) {
-      window.devGenerateFromInput(value);
-    }
+            if (window.devGenerateFromInput) {
+              window.devGenerateFromInput(value);
+            }
 
-  } else if (window.fetchCity) {
+          } else if (window.fetchCity) {
 
-    window.fetchCity(value);
+            window.fetchCity(value);
 
-  }
+          }
 
-  input.value = "";
-}
+          input.value = "";
+        }
       }
     });
 
